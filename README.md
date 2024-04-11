@@ -22,10 +22,23 @@ To get started, follow these steps:
 
 That's it! You should now have the backend server and frontend application up and running.
 
-## Contributing
+4. Login Accounts:
+    - Use the following login accounts:
+        - Email: yahyaouikoussay@fsm.u-monastir.tn, Password: admin1234
+        - Email: admin@gmail.com, Password: admin1234
 
-Contribution for Koussay Yahyaoui
+        ## Database Setup
 
-## License
+        The database for this project is hosted in MongoDB Atlas, a cloud-based database service. To access the database, you will need an invitation that has been sent to your email: yahyaouikoussay@fsm.u-monastir.tn. Please check your email for the invitation.
 
-This project is licensed under the [MIT License](LICENSE).
+        ## Project Download and MongoDB Invitation
+
+        An invitation to download the project has been sent to your GitHub account. Additionally, an invitation to access the MongoDB database has also been sent to your email: yahyaouikoussay@fsm.u-monastir.tn. Please check your GitHub account and email for the invitations.
+
+        ## Contributing
+
+        Contribution for Koussay Yahyaoui
+
+        ## License
+
+        This project is licensed under the [MIT License](LICENSE).
