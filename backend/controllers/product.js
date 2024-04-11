@@ -56,7 +56,10 @@ exports.getProductById = async (req, res) => {
     // on retourne le message d'erreur avec status 400
     res
       .status(400)
-      .json({ status: false, message: "Erreur : Produit avec cette identifiant n'existe pas"});
+      .json({
+        status: false,
+        message: "Erreur : Produit avec cette identifiant n'existe pas",
+      });
   }
 };
 
@@ -68,14 +71,23 @@ exports.updateProductById = async (req, res) => {
     // on récupère l'ID du produit
     const productId = req.params.id;
     // on met à jour le produit par ID
-    await Product.findByIdAndUpdate(productId, req.body);
+    const updatedProduct = await Product.findByIdAndUpdate(productId, req.body);
     // on retourne le message de succès avec status 200
-    res.status(200).json({ status: true, message: "Le produit a été modifié avec succès" });
+    res
+      .status(200)
+      .json({
+        status: true,
+        message: "Le produit a été modifié avec succès",
+        res: updatedProduct,
+      });
   } catch (error) {
     // on retourne le message d'erreur avec status 400
     res
       .status(400)
-      .json({ status: false, message: "Erreur : Produit avec cette identifiant n'existe pas" });
+      .json({
+        status: false,
+        message: "Erreur : Produit avec cette identifiant n'existe pas",
+      });
   }
 };
 
@@ -89,11 +101,16 @@ exports.deleteProductById = async (req, res) => {
     // on supprime le produit par ID
     await Product.findByIdAndDelete(productId);
     // on retourne le message de succès avec status 200
-    res.status(200).json({ status: true, message: "Le produit a été supprimé avec succès" });
+    res
+      .status(200)
+      .json({ status: true, message: "Le produit a été supprimé avec succès" });
   } catch (error) {
     // on retourne le message d'erreur avec status 400
     res
       .status(400)
-      .json({ status: false, message: "Erreur : Produit avec cette identifiant n'existe pas" });
+      .json({
+        status: false,
+        message: "Erreur : Produit avec cette identifiant n'existe pas",
+      });
   }
 };

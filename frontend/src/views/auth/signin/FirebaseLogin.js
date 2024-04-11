@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import React from 'react';
+import React, { useState } from 'react';
 import { Row, Col, Button, Alert } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import * as Yup from 'yup';
@@ -10,6 +10,7 @@ import { login } from '../../../redux/authSlice';
 const FirebaseLogin = ({ className, ...rest }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   return (
     <React.Fragment>
@@ -27,11 +28,13 @@ const FirebaseLogin = ({ className, ...rest }) => {
           try {
             // login(values.email, values.password);
             console.log(values);
+            setLoading(true);
             dispatch(login({ email: values.email, password: values.password }))
               .unwrap()
               .then(() => {
                 setStatus({ success: true });
                 setSubmitting(true);
+                console.log('Login successful and redirecting to /dashboard');
                 navigate('/dashboard', { replace: true });
               })
               .catch((error) => {
@@ -39,6 +42,9 @@ const FirebaseLogin = ({ className, ...rest }) => {
                 setStatus({ success: false });
                 setErrors({ submit: message });
                 setSubmitting(true);
+              })
+              .finally(() => {
+                setLoading(false);
               });
           } catch (error) {
             console.log(error);
@@ -84,7 +90,7 @@ const FirebaseLogin = ({ className, ...rest }) => {
 
             <Row>
               <Col mt={2}>
-                <Button className="btn-block" color="primary" size="large" type="submit" variant="primary">
+                <Button disabled={loading} className="btn-block" color="primary" size="large" type="submit" variant="primary">
                   Signin
                 </Button>
               </Col>

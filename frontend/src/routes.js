@@ -27,7 +27,7 @@ export const renderRoutes = (routes = []) => (
             element={
               <Guard>
                 {route.requiresAuth && !isAuthenticated() ? (
-                  <Navigate to="/login" />
+                  ( (<Navigate to="/login" />))
                 ) : (
                   <Layout>{route.routes ? renderRoutes(route.routes) : <Element props={true} />}</Layout>
                 )}

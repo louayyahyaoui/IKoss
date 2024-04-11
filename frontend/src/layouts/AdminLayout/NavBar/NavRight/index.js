@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Card, ListGroup, Dropdown } from 'react-bootstrap';
 import { Link, useNavigate } from 'react-router-dom';
 import PerfectScrollbar from 'react-perfect-scrollbar';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ChatList from './ChatList';
 
@@ -13,6 +13,7 @@ import avatar4 from '../../../../assets/images/user/avatar-4.jpg';
 import { logout } from '../../../../redux/authSlice';
 
 const NavRight = () => {
+  const { user } = useSelector((state) => state.auth);
   const [listOpen, setListOpen] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -138,7 +139,9 @@ const NavRight = () => {
             <Dropdown.Menu align="end" className="profile-notification">
               <div className="pro-head">
                 <img src={avatar1} className="img-radius" alt="User Profile" />
-                <span>John Doe</span>
+                <span>
+                  {user?.name} {user?.surname}
+                </span>
                 <Link to="#" className="dud-logout" title="Logout">
                   <i className="feather icon-log-out" />
                 </Link>

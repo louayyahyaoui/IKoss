@@ -59,7 +59,7 @@ exports.getAccessToken = async (req, res) => {
     process.env.SECRET,
     {
       // expiration time of 15 days
-      expiresIn: "1m",
+      expiresIn: "3d",
     }
   );
   let userWithoutPassword = user.toObject();
