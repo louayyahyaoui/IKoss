@@ -7,6 +7,7 @@ import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useDispatch } from '../../store';
 import { addProduct, editProduct, getProducts } from '../../redux/productSlice';
+import { Alert, Col } from 'react-bootstrap';
 
 function ProductForm({ show, handleClose, selectedProduct }) {
   useEffect(() => {
@@ -14,6 +15,7 @@ function ProductForm({ show, handleClose, selectedProduct }) {
   }, [selectedProduct, show]);
 
   const validationSchema = Yup.object().shape({
+    id: Yup.number().required('ID is required'),
     name: Yup.string().required('Name is required'),
     description: Yup.string().required('Description is required'),
     price: Yup.number().required('Price is required'),
@@ -21,29 +23,6 @@ function ProductForm({ show, handleClose, selectedProduct }) {
     discount: Yup.number()
   });
   const dispatch = useDispatch();
-
-  const handleSave = (values) => {
-    console.log(values);
-    const valuesToSubmit = {
-      ...values,
-      price: parseFloat(values.price),
-      quantity: parseInt(values.quantity),
-      discount: parseInt(values.discount),
-      _id: selectedProduct ? selectedProduct._id : null
-    };
-    const action = selectedProduct ? editProduct(valuesToSubmit) : addProduct(valuesToSubmit);
-    console.log('valuesToSubmit', valuesToSubmit);
-    dispatch(action)
-      .unwrap()
-      .then(() => {
-        dispatch(getProducts()).then(() => {
-          handleClose();
-        });
-      })
-      .catch((e) => {
-        console.log(e);
-      });
-  };
 
   return (
     <>
@@ -54,6 +33,7 @@ function ProductForm({ show, handleClose, selectedProduct }) {
         <Modal.Body>
           <Formik
             initialValues={{
+              id: selectedProduct ? selectedProduct.id : '',
               name: selectedProduct ? selectedProduct.name : '',
               description: selectedProduct ? selectedProduct.description : '',
               price: selectedProduct ? selectedProduct.price : '',
@@ -61,12 +41,56 @@ function ProductForm({ show, handleClose, selectedProduct }) {
               discount: selectedProduct ? selectedProduct.discount : ''
             }}
             validationSchema={validationSchema}
-            onSubmit={(values) => {
-              handleSave(values);
+            onSubmit={(values, { setErrors, setStatus, setSubmitting }) => {
+              try {
+                console.log(values);
+                const valuesToSubmit = {
+                  ...values,
+                  price: parseFloat(values.price),
+                  quantity: parseInt(values.quantity),
+                  discount: parseInt(values.discount),
+                  _id: selectedProduct ? selectedProduct._id : null
+                };
+                const action = selectedProduct ? editProduct(valuesToSubmit) : addProduct(valuesToSubmit);
+                console.log('valuesToSubmit', valuesToSubmit);
+                dispatch(action)
+                  .unwrap()
+                  .then(() => {
+                    dispatch(getProducts()).then(() => {
+                      handleClose();
+                    });
+                  })
+                  .catch((error) => {
+                    const message = error.message || 'Something went wrong';
+                    setStatus({ success: false });
+                    setErrors({ submit: message });
+                    setSubmitting(true);
+                  });
+              } catch (error) {
+                const message = error.message || 'Something went wrong';
+                console.log('message', message);
+                setStatus({ success: false });
+                setErrors({ submit: message });
+                setSubmitting(false);
+                console.log('message', message);
+              }
             }}
           >
             {({ errors, touched, handleChange, handleSubmit, values }) => (
               <Form onSubmit={handleSubmit}>
+                <Form.Group className="mb-3" controlId="productForm.id">
+                  <Form.Label>ID</Form.Label>
+                  <Form.Control
+                    type="number"
+                    name="id"
+                    onChange={handleChange}
+                    value={values.id}
+                    placeholder="Product ID goes here"
+                    autoFocus
+                    isInvalid={touched.id && errors.id}
+                  />
+                  <Form.Control.Feedback type="invalid">{errors.id}</Form.Control.Feedback>
+                </Form.Group>
                 <Form.Group className="mb-3" controlId="productForm.name">
                   <Form.Label>Name</Form.Label>
                   <Form.Control
@@ -75,7 +99,6 @@ function ProductForm({ show, handleClose, selectedProduct }) {
                     onChange={handleChange}
                     value={values.name}
                     placeholder="Product name goes here"
-                    autoFocus
                     isInvalid={touched.name && errors.name}
                   />
                   <Form.Control.Feedback type="invalid">{errors.name}</Form.Control.Feedback>
@@ -131,6 +154,11 @@ function ProductForm({ show, handleClose, selectedProduct }) {
                   />
                   <Form.Control.Feedback type="invalid">{errors.discount}</Form.Control.Feedback>
                 </Form.Group>
+                {errors.submit && (
+                  <Col sm={12}>
+                    <Alert variant="danger">{errors.submit}</Alert>
+                  </Col>
+                )}
                 <div className="d-flex align-items-center justify-content-end">
                   <Button variant="secondary" onClick={handleClose} className="me-2">
                     Close

@@ -103,7 +103,7 @@ function Products() {
                 <tbody>
                   {products?.map((product) => (
                     <tr key={product._id}>
-                      <td>{product._id}</td>
+                      <td>{product?.id || 'No ID assigned'}</td>
                       <td>{product.name}</td>
                       <td>{product.description}</td>
                       <td>

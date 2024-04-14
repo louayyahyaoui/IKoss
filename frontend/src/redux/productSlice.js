@@ -32,7 +32,7 @@ export const addProduct = createAsyncThunk('product/addProduct', async (values) 
   } catch (error) {
     const customError = {
       name: 'Custom axios error',
-      message: error.response.data.error,
+      message: error.response.data.message,
       data: error.response.data
     };
     throw customError;
@@ -61,7 +61,7 @@ export const editProduct = createAsyncThunk('product/editProduct', async (values
   } catch (error) {
     const customError = {
       name: 'Custom axios error',
-      message: error.response.data.error,
+      message: error.response.data.message,
       data: error.response.data
     };
     throw customError;
@@ -105,8 +105,8 @@ export const productSlice = createSlice({
     },
     [deleteProduct.fulfilled]: (state, action) => {
       state.products = state.products.filter((item) => {
-				return item._id !== action.payload;
-			});
+        return item._id !== action.payload;
+      });
     },
     [deleteProduct.rejected]: (state, action) => {
       state.error = action.error.message;
@@ -116,12 +116,12 @@ export const productSlice = createSlice({
     },
     [editProduct.fulfilled]: (state, action) => {
       state.products = state.products.map((item) => {
-				if (item._id === action.payload._id) {
-					item = action.payload;
-					return item;
-				}
-				return item;
-			});
+        if (item._id === action.payload._id) {
+          item = action.payload;
+          return item;
+        }
+        return item;
+      });
     },
     [editProduct.rejected]: (state, action) => {
       state.error = action.error.message;
